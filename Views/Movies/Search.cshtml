@@ -1,0 +1,23 @@
+﻿@using MoviePro.Models.Database
+@model List<Movie>
+
+@{
+    ViewData["Title"] = "MoviePro";
+}
+
+<div>
+    <h3>Search Results</h3>
+    @foreach (Movie movie in @Model)
+    {
+        <div class="col-4 mb-2">
+            <div class="card" style="width: 18rem;">
+                <img src="@movie.Poster" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title clampTitle">@movie.Title</h5>
+                    <p class="card-text clampOverview">@movie.Overview</p>
+                    <a asp-action="Details" asp-controller="Movies" asp-route-id="@movie.Id" class="btn btn-lg btn-block btn-warning font-weight-bold">Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

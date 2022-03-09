@@ -6,6 +6,7 @@ using MoviePro.Data;
 using MoviePro.Models.Database;
 using MoviePro.Models.Settings;
 using MoviePro.Services.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -69,6 +70,51 @@ namespace MoviePro.Controllers
             return View(movies);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Search(string searched)
+        {
+
+            List<Movie> movies = new List<Movie>();
+            List<Movie> actorMovies = new List<Movie>();
+            List<Movie> allMovies = await _context.Movie.ToListAsync();
+
+            // Goes through all movies
+            foreach (Movie movie in allMovies)
+            {
+                if (movie.Cast.Any(m => m.Name.ToLower() == searched.ToLower()))
+                {
+
+                    actorMovies.Add(movie);
+
+                }
+
+                else if(movie.Title == searched)
+                {
+                    movies.Add(movie);
+                }
+            }
+
+            
+            List<Movie> fullList = movies.Union(actorMovies).ToList();
+
+            if(fullList.Count == 0)
+            {
+                return NotFound();
+            }
+
+            else
+            {
+                if(fullList.Count > 0)
+                {
+                    return View(fullList);
+                }
+
+                return NotFound();
+            }
+
+
+        }
+
         public async Task<IActionResult> Details(int? id, bool local = false)
         {
             if (id == null)
@@ -83,10 +129,10 @@ namespace MoviePro.Controllers
                                             .Include(m => m.Crew)
                                             .FirstOrDefaultAsync(m => m.Id == id);
             }
-           
+
             else
             {
-                
+
                 var movieDetail = await _tmdbMovieService.MovieDetailAsync((int)id);
                 movie = await _tmdbMappingService.MapMovieDetailAsync(movieDetail);
             }
@@ -169,7 +215,7 @@ namespace MoviePro.Controllers
                     _context.Update(movie);
                     await _context.SaveChangesAsync();
                 }
-                
+
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!MovieExists(movie.Id))
