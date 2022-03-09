@@ -42,6 +42,7 @@ namespace MoviePro
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.AddHttpClient();
             services.AddTransient<SeedService>();
             services.AddScoped<IRemoteMovieService, TMDBMovieService>();
             services.AddScoped<IDataMappingService, TMDBMappingService>();
