@@ -20,8 +20,8 @@
                     <ul class="navbar-nav flex-grow-1">
 
                         <li class = "nav-item">
-                            <form class = "search" asp-controller = "Movies" asp-action = "Search" >
-                                <input type = "search" placeholder = "Search Movies or Actors" size = "50" />
+                            <form class = "search" asp-controller = "Movies" asp-action = "Search" method = "get" >
+                                <input name = "searched" type = "search" placeholder = "Search Movies or Actors" size = "50" />
                             </form>
                         </li>
                         
